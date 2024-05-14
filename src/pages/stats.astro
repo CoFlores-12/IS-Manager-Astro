@@ -6,5 +6,64 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="Stats | IS Manager">
     <main class="col">
         <NavBar title="Stats" origin="home"/>
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+            <div id="chart"></div>
+        </div>
     </main>
 </Layout>
+<script type="module" src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script is:inline type="module">
+    const rem = remaining.length;
+    const total = career.classes.length;
+    const passed = past.length;
+    var options = {
+        series: [75, 25],
+        labels: ['Passed', 'Remaining'],
+        chart: {
+            type: 'donut',
+        },
+        plotOptions: {
+            pie: {
+                donut: {
+                    labels: {
+                        show: true,
+                        name: {
+                            show: true,
+                            offsetY: -20,
+                            formatter: function (val) {
+                                return val;
+                            }
+                        },
+                        value: {
+                            show: true,
+                            offsetY: 10,
+                            formatter: function (val) {
+                                return parseInt((val/100)*total) + " Classes";
+                            }
+                        },
+                        total: {
+                            show: true,
+                            label: 'Progress',
+                            formatter: function (w) {
+                                return `${rem+'/'+total} Classes`
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        colors: ['#FF4500', '#FFA500'],
+        stroke: {
+            width: 0, // Elimina el borde blanco
+        },
+        legend: {
+            position: 'bottom',
+            horizontalAlign: 'center',
+            offsetY: 10
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+    //TODO: Add more Charts
+</script>

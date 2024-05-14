@@ -24,6 +24,7 @@ const { title } = Astro.props;
 			const data = JSON.parse(localStorage.getItem("data"));
 			data.classes = data.classes.reverse();
 			
+			//TODO: verify optativas y electivas
 			const past = data.classes.filter(function(element){
 				return element.CALIFICACION >= 65;
 			});

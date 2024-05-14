@@ -6,5 +6,28 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="Map | IS Manager">
 <main>
     <NavBar title="Map" origin="home" />
+    <div class="map">
+        <iframe id="framemap" src="" frameborder="0"></iframe>
+    </div>
 </main>
 </Layout>
+<script is:inline type="module">
+    let framemap = document.getElementById('framemap');
+    framemap.setAttribute('src', '/maps/'+data.INFO.Carrera+'.html');
+    
+</script>
+<style>
+    .map{
+    width: 100%;
+    overflow-x: scroll;
+    height: calc(100vh - 60px) !important;
+    box-sizing: border-box;
+    scrollbar-width: 10px !important;
+}
+    #framemap {
+    height: calc(100% - 4px);
+    min-width: 100%;
+    width: auto !important;
+    aspect-ratio: 16/9;
+}
+</style>
