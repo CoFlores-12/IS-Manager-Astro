@@ -3,8 +3,40 @@ import NavBar from "../components/NavBar.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Map | IS Manager">
+<Layout title="Plan | IS Manager">
 <main>
     <NavBar title="Plan" origin="home" />
+    <div class="frame">
+        <img src="" alt="plan de estudios" id="plan" class="min-w-[290%] md:min-w-[180%] lg:min-w-[100%] ">
+    </div>
 </main>
 </Layout>
+
+<script>
+    const plan = document.getElementById('plan');
+    plan.src = '/plans/'+data.INFO.Carrera+'.jpg'
+</script>
+
+<style>
+    #plan{
+        min-height: 100%;
+        width: auto;
+
+    }
+
+    .frame{
+        min-width: 100%;
+        height: calc(100vh - 45px) !important;
+        box-sizing: border-box;
+        overflow-x: scroll;
+    }
+    .frame::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .frame {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+</style>
