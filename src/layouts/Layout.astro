@@ -1,0 +1,134 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import '../styles/global.css'
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<ViewTransitions />
+		<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/6.1.0/shuffle.min.js" integrity="sha512-r8mIpk3ypCMwNxH6srRZGbjHQlOFt3Mq2vrZ/iymx6g9JUqTeVavofeX6gbrxAC74X5HmBy5gxyhCm6OiXrM0Q==" crossorigin="anonymous" referrerpolicy="no-referrer" ></script>
+		<script is:inline>
+			const career = JSON.parse(localStorage.getItem("career"));
+			const data = JSON.parse(localStorage.getItem("data"));
+			data.classes = data.classes.reverse();
+			
+			const past = data.classes.filter(function(element){
+				return element.CALIFICACION >= 65;
+			});
+			
+			const optativasRM = [];
+			const optativasPast = [];
+			for (let i = 0; i < career.optativas.length; i++) {
+				const optativa = past.find(elm => elm.CODIGO.trim() === career.optativas[i].codigo.trim())
+				if (optativa != undefined) {
+					optativasPast.push(career.optativas[i])
+				}
+			}
+
+			const remaining = career.classes.filter(function(element){
+				if (element.codigo.trim() === "Electiva") {
+				const electivasJSON = [];
+				for (let i = 0; i < career.electivas[element.nombre].length; i++) {
+					electivasJSON.push(career.electivas[element.nombre][i]);
+					const electiva = past.find(elm => elm.CODIGO.trim() === career.electivas[element.nombre][i].codigo.trim())
+					
+					if (electiva != undefined) {
+					return false;
+					}
+				}
+				element.classes = electivasJSON;
+				}
+				if (element.codigo.trim() === "optativa") {
+				if(optativasPast.length > 0) {
+					optativasPast.pop(0);
+					return false;
+				}else{
+					optativasRM.push(element)
+				}
+				}
+				isPast = past.find(elm => elm.CODIGO.trim() === element.codigo.trim())
+				return isPast === undefined
+			})
+
+			const available = remaining.filter(function(element){
+				counter = 0;
+
+				if (element.codigo.trim() === "optativa") {
+				optativasJSON = [];
+				for (let i = 0; i < career.optativas.length; i++) {
+					counterOP = 0;
+					career.optativas[i].requisitos.forEach(req => {
+					if (req === '') {
+						counterOP++;
+					}else{
+						isPast = past.find(elm => elm.CODIGO.trim() === req.trim())
+						if (isPast != undefined) {
+						counterOP++;
+						}
+					}
+					});
+					if (counterOP===3) {
+					optativasJSON.push(career.optativas[i])
+					}
+				}
+				element.classes = optativasJSON;
+				return optativasJSON.length != 0;
+				}
+
+				element.requisitos.forEach(req => {
+				if (req === '') {
+					counter++;
+				}else{
+					isPast = past.find(elm => elm.CODIGO.trim() === req.trim())
+					if (isPast != undefined) {
+					counter++;
+					}
+				}
+				});
+				return counter===3;
+			});
+		</script>
+	</head>
+	<body class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white py-2">
+		<slot />
+	</body>
+</html>
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+	html {
+		font-family: system-ui, sans-serif;
+	}
+	code {
+		font-family:
+			Menlo,
+			Monaco,
+			Lucida Console,
+			Liberation Mono,
+			DejaVu Sans Mono,
+			Bitstream Vera Sans Mono,
+			Courier New,
+			monospace;
+	}
+</style>

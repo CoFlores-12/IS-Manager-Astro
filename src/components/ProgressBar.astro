@@ -1,0 +1,20 @@
+---
+interface Props {
+	idProgress: string;
+    title: string;
+    idText: string;
+}
+
+const { idProgress, title, idText } = Astro.props;
+---
+
+
+<div class="relative">
+    <div class="flex justify-between">
+        <p>{title}</p>
+        <p id={idText}></p>
+    </div>
+    <div class="progress-loader relative w-full bg-[#ffffff80] h-[10px] rounded-lg my-2">
+        <div id={idProgress} class='h-[10px] rounded-lg bg-white dark:bg'></div>
+    </div>
+</div>

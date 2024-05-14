@@ -1,0 +1,291 @@
+---
+import NavBar from "../components/NavBar.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Classes | IS Manager">
+    <main class="col">
+        <NavBar title="Classes" origin="home"/>
+        <div class="row justify-center">
+            <div class="radio-inputs bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 my-4">
+                <label class="radio">
+                  <input type="radio" name="radio" checked="" data-option="1" data-button>
+                  <span class="name">All</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="radio" data-option="2" data-button>
+                  <span class="name">Remaining</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="radio" data-option="3" data-button>
+                  <span class="name">History</span>
+                </label>
+              </div>
+        </div>
+        <section>
+          <div class="hidden flex justify-center " id="historyOptions">
+            <div class="radio-inputs bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500">
+                <label class="radio">
+                  <input type="radio" name="radio2" data-option="7" checked="" data-his>
+                  <span class="name">All</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="radio2" data-option="4"  data-his>
+                  <span class="name">APR</span>
+                </label>
+                    
+                <label class="radio">
+                  <input type="radio" name="radio2" data-option="3" data-his>
+                  <span class="name">RPB</span>
+                </label>
+              </div>
+        </div>
+        </section>
+          
+        <section>
+          <div class="hidden flex justify-center " id="RemainingOptions">
+            <div class="radio-inputs bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500">
+                <label class="radio">
+                  <input type="radio" name="radio3" data-option="1" checked="" data-rem>
+                  <span class="name">All</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="radio3" data-option="2"  data-rem>
+                  <span class="name">Available</span>
+                </label>
+              </div>
+        </div>
+        </section>
+        <section class="p-2">
+          <div id="headerTable" class="row w-full justify-between">
+            <p>Code</th>
+            <p>Name</th>
+            <p>Status</th>
+            <p>UV</th>
+            </div>
+          <div id="classesTableBody" class="grid  w-full">
+            
+          </div>
+        </section>
+    </main>
+    
+</Layout>
+
+<style is:global>
+  table {
+    border-collapse: separate;
+border-spacing: 0px 0.5rem;
+}
+#headerTable{
+  --tw-bg-opacity: 1;
+    background-color: rgb(226 232 240 / var(--tw-bg-opacity));
+    margin-bottom: 10px !important;
+  padding: 10px;
+  transform: translate(0px, 0px) scale(1);
+  border-radius: 10px;
+}
+.item{
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+    color: rgb(15 23 42 / var(--tw-text-opacity));
+  margin-bottom: 10px !important;
+  padding: 10px;
+  transform: translate(0px, 0px) scale(1);
+  border-radius: 10px;
+}
+.item>p:nth-child(1), #headerTable>p:nth-child(1){
+  flex: 1;
+}
+.item>p:nth-child(2), #headerTable>p:nth-child(2){
+  flex: 4;
+}
+.item>p:nth-child(3), #headerTable>p:nth-child(3){
+  flex: 1;
+  text-align: center !important;
+  display: flex;
+  justify-content: center
+}
+.item>p:nth-child(4), #headerTable>p:nth-child(4){
+  flex: 1;
+  text-align: center !important;
+}
+
+    .radio-inputs {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 0.5rem;
+        box-sizing: border-box;
+        box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+        padding: 0.25rem;
+        width: 300px;
+        font-size: 14px;
+    }
+
+.radio-inputs .radio {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.radio-inputs .radio input {
+  display: none;
+}
+
+.radio-inputs .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: .5rem 0;
+  transition: all .15s ease-in-out;
+}
+
+.radio-inputs .radio input:checked + .name {
+  background-color: #fff;
+  font-weight: 600;
+  color: rgb(15 23 42 / 1) !important;
+}
+@media (prefers-color-scheme: dark) {
+    .radio-inputs .radio input:checked + .name {
+        background-color: rgb(15 23 42 / 1);
+        color: #fff !important;
+    }
+    .item, #headerTable {
+      --tw-bg-opacity: 1;
+        background-color: rgb(30 41 59 / var(--tw-bg-opacity));
+        --tw-text-opacity: 1;
+        color: rgb(255 255 255 / var(--tw-text-opacity));
+    }
+    #headerTable{
+  --tw-bg-opacity: 1;
+    background-color: rgb(226 232 240 / var(--tw-bg-opacity));
+    --tw-bg-opacity: 1;
+        background-color: rgb(51 65 85 / var(--tw-bg-opacity));
+}
+}
+</style>
+
+<script  type="module" is:inline>
+  const buttons = document.querySelectorAll('[data-button]');
+  const buttonsHis = document.querySelectorAll('[data-his]');
+  const buttonsRem = document.querySelectorAll('[data-rem]');
+  const historyOptions = document.getElementById('historyOptions');
+  const RemainingOptions = document.getElementById('RemainingOptions');
+  const classesTableBody = document.getElementById('classesTableBody');
+  const Shuffle = window.Shuffle; // Assumes you're using the UMD version of Shuffle (for example, from unpkg.com).
+  const element = document.getElementById('classesTableBody');
+  const sizer = element.querySelector('.js-shuffle-sizer');
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', (e) => tabOption(e.target));
+  });
+  function tabOption(object) {
+    const value = parseInt(object.getAttribute('data-option'));
+    historyOptions.classList.add('hidden');
+    RemainingOptions.classList.add('hidden');
+    switch (value) {
+      case 1:
+      shuffleInstance.filter();
+        break;
+      case 2:
+        RemainingOptions.classList.remove('hidden');
+        shuffleInstance.filter('REM');
+        break;
+      case 3:
+        historyOptions.classList.remove('hidden');
+        shuffleInstance.filter(['APR', 'RPB', 'ABN', 'NSP']);
+        break;
+      default:
+        break;
+    }
+  }
+  buttonsHis.forEach((button) => {
+    button.addEventListener('click', (e) => tabOptionHis(e.target));
+  });
+  function tabOptionHis(object) {
+    const value = parseInt(object.getAttribute('data-option'));
+    switch (value) {
+      case 7:
+        shuffleInstance.filter(['APR', 'RPB', 'ABN', 'NSP']);
+        break;
+      case 4:
+        shuffleInstance.filter(['APR']);
+        break;
+      case 3:
+        shuffleInstance.filter(['RPB', 'ABN', 'NSP']);
+        break;
+      default:
+        break;
+    }
+  }
+  buttonsRem.forEach((button) => {
+    button.addEventListener('click', (e) => tabOptionRem(e.target));
+  });
+  function tabOptionRem(object) {
+    const value = parseInt(object.getAttribute('data-option'));
+    switch (value) {
+      case 1:
+        shuffleInstance.filter('REM');
+        break;
+      case 2:
+        shuffleInstance.filter('DIS');
+        console.log('filter disp');
+        break;
+      default:
+        break;
+    }
+  }
+    const statusIcon = {
+        "REM": `<svg class="w-6 h-6 text-slate-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+  </svg>
+  `,
+        "APR": `<svg class="w-6 h-6 text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+  </svg>
+  `,
+        "RPB": `<svg class="w-6 h-6 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+  </svg>
+  `,
+        "ABN": `<svg class="w-6 h-6 text-yellow-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+  </svg>
+  `,
+        "NSP": `<svg class="w-6 h-6 text-yellow-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+  </svg>
+  `,
+      }
+    remaining.forEach(cl => {
+      const isDisp = available.find((el) => el.codigo == cl.codigo);
+      const disp = isDisp!=undefined ? '["REM", "DIS"]': '["REM"]';
+      classesTableBody.innerHTML += `<div class="item w-full row justify-between"  data-groups='${disp}'>
+                <p>${cl.codigo}</p>
+                <p>${cl.nombre}</p>
+                <p>${statusIcon['REM']}</p>
+                <p>${cl.uv}</p>
+              </div>`
+    });
+    const dataRev = data.classes
+    dataRev.forEach(cl => {
+      classesTableBody.innerHTML += `<div class="item w-full row justify-between"  data-groups='["${cl.OBS}"]'>
+                <p>${cl.CODIGO}</p>
+                <p>${cl.ASIGNATURA}</p>
+                <p>${statusIcon[cl.OBS]}</p>
+                <p>${parseInt(cl.UV)}</p>
+              </div>`
+    });
+
+
+    const shuffleInstance = new Shuffle(element, {
+      itemSelector: '.item',
+      sizer: sizer, // could also be a selector: '.js-shuffle-sizer'
+    });
+
+    
+
+</script>

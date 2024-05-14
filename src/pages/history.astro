@@ -1,0 +1,74 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="History | IS Manager">
+    <main class="col">
+        <div class="row justify-center">
+            <h1 class="text-2xl font-bold">History</h1>
+        </div>
+        <div class="row justify-center">
+            <div class="radio-inputs bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 my-4">
+                <label class="radio">
+                  <input type="radio" name="radio" checked="">
+                  <span class="name">All</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="radio">
+                  <span class="name">APR</span>
+                </label>
+                    
+                <label class="radio">
+                  <input type="radio" name="radio">
+                  <span class="name">RPB</span>
+                </label>
+              </div>
+        </div>
+    </main>
+</Layout>
+
+<style>
+    .radio-inputs {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 0.5rem;
+        box-sizing: border-box;
+        box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+        padding: 0.25rem;
+        width: 300px;
+        font-size: 14px;
+    }
+
+.radio-inputs .radio {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.radio-inputs .radio input {
+  display: none;
+}
+
+.radio-inputs .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: .5rem 0;
+  transition: all .15s ease-in-out;
+}
+
+.radio-inputs .radio input:checked + .name {
+  background-color: #fff;
+  font-weight: 600;
+  color: rgb(15 23 42 / 1) !important;
+}
+@media (prefers-color-scheme: dark) {
+    .radio-inputs .radio input:checked + .name {
+        background-color: rgb(15 23 42 / 1);
+        color: #fff !important;
+    }
+}
+</style>

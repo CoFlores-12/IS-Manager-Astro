@@ -1,0 +1,19 @@
+.bg-primary {
+    background-color: #605DFF;
+}
+.bg-secondary {
+    background-color: #8857e2;
+}
+.col {
+    display: flex;
+    flex-direction: column;
+}
+.row {
+    display: flex;
+    flex-direction: row;
+}
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

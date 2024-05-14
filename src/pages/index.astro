@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Logo from '../components/logo.astro';
+---
+
+<Layout title="Welcome to Astro.">
+	<div id="modalLoading" class="hidden absolute h-screen w-full top-0 bg-[#00000030] flex items-end z-50 md:items-center justify-center">
+		<div class=" bg-white dark:bg-slate-900 min-h-10 w-full flex flex-col justify-center items-center rounded-t-3xl py-4 md:w-auto md:p-10 md:rounded-b-3xl">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-[120px]">
+				<radialGradient id="a12" cx=".66" fx=".66" cy=".3125" fy=".3125"  gradientTransform="scale(1.5)">
+					<stop offset="0" stop-color="#A168FF"></stop>
+					<stop offset=".3" stop-color="#A168FF" stop-opacity=".9"></stop>
+					<stop offset=".6" stop-color="#A168FF" stop-opacity=".6"></stop>
+					<stop offset=".8" stop-color="#605DFF" stop-opacity=".3"></stop>
+					<stop offset="1" stop-color="#8857e2" stop-opacity="0"></stop>
+				</radialGradient>
+				<circle transform-origin="center" fill="none" stroke="url(#a12)" stroke-width="15" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70">
+					<animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="2" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#605DFF" stroke-width="15" stroke-linecap="round" cx="100" cy="100" r="70">
+				</circle>
+			</svg>
+			<h4 class="text-2xl">Loading</h4>
+		</div>
+	</div>
+	<main class="flex flex-col h-screen">
+		<div class="relative h-[25%] flex justify-center items-center z-50 flex-col">
+			
+			<Logo classStyke='text-white dark:text-slate-900 h-[50%]'/>
+			<h1 class="text-2xl text-white dark:text-slate-900">IS Manager</h1>
+		</div>
+		<div class="ocean z-10">
+			<div class="wave"></div>
+			<div class="wave wave2"></div>
+		</div>
+		<div class="card bg-white dark:bg-slate-900 h-[75%] items-center justify-center flex flex-col ">
+			<h3 class="text-3xl mb-8 text-slate-900 dark:text-white">Welcome!</h3>
+			<input type="text" name="" id="" placeholder="Key" class="bg-[#F7F7F7] dark:bg-slate-800">
+			<input type="password" name="" id="" placeholder="Password"  class="bg-[#F7F7F7] dark:bg-slate-800">
+			<button id="btnLogin" class="btn mt-4 text-white dark:text-slate-900">Login</button>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		overflow: hidden;
+		min-height: 100vh;
+		position: relative;
+	}
+	
+.ocean {
+  height: 17%;
+  width: 100%;
+  position: absolute;
+  transform: rotate(180deg);
+  top: 0;
+  left: 0;
+  background: #605DFF;
+}
+
+.wave {
+  background: url(/wave2.svg) repeat-x;
+  position: absolute;
+  width: 6400px;
+  top: -190px;
+  left: 0;
+  height: 198px;
+  transform: translate(0, 0, 0);
+  border: none;
+  animation: wave 7s ease infinite;
+}
+
+.wave:nth-of-type(2) {
+	background: url(/wave.svg) repeat-x;
+  top: -160px;
+  animation: swell 4s ease infinite;
+  opacity: 1;
+}
+
+@keyframes wave {
+  0% { transform: translate(0px, 0px);}
+  100% { margin-left: -1600px;}
+}
+@keyframes swell {
+  0%, 100% {
+    transform: translate(0, -30px);
+  }
+  50% {
+    transform: translate(0, 5px);
+  }
+}
+
+.btn {
+	padding: .7rem 1.5rem;
+	background: linear-gradient(90deg, #605DFF 0%, #8857e2 100%);
+	border-radius: 10px;
+	font-weight: bold;
+
+}
+
+input {
+	padding: .8rem;
+	border-radius: 1.3rem;
+	margin: .5rem 0;
+}
+</style>
+
+<script>
+	import { navigate } from 'astro:transitions/client';
+	const btnLogin = document.getElementById("btnLogin");
+	const modalLoading = document.getElementById("modalLoading");
+
+	//TODO: remove this function
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	btnLogin.addEventListener("click",async ()=>{
+		modalLoading.classList.remove('hidden');
+
+		//TODO: auth with API
+		await sleep(6000);
+
+		navigate('/home');
+	});
+</script>
