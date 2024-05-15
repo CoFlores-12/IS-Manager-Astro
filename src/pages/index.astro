@@ -3,8 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Logo from '../components/logo.astro';
 ---
 
-<Layout title="Welcome to Astro.">
-	<div id="modalLoading" class="hidden absolute h-screen w-full top-0 bg-[#00000030] flex items-end z-50 md:items-center justify-center">
+<Layout title="Welcome to IS Manager">
+	<div id="modalLoading" class="hidden absolute h-[100%] w-full top-0 bg-[#00000030] flex items-end z-50 md:items-center justify-center">
 		<div class=" bg-white dark:bg-slate-900 min-h-10 w-full flex flex-col justify-center items-center rounded-t-3xl py-4 md:w-auto md:p-10 md:rounded-b-3xl">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-[120px]">
 				<radialGradient id="a12" cx=".66" fx=".66" cy=".3125" fy=".3125"  gradientTransform="scale(1.5)">
@@ -21,7 +21,7 @@ import Logo from '../components/logo.astro';
 			<h4 class="text-2xl">Loading</h4>
 		</div>
 	</div>
-	<main class="flex flex-col h-screen">
+	<main class="flex flex-col h-[100%]">
 		<div class="relative h-[25%] flex justify-center items-center z-50 flex-col">
 			
 			<Logo classStyke='text-white dark:text-slate-900 h-[50%]'/>
@@ -44,7 +44,7 @@ import Logo from '../components/logo.astro';
 	main {
 		margin: auto;
 		overflow: hidden;
-		min-height: 100vh;
+		min-height: 100%;
 		position: relative;
 	}
 	
