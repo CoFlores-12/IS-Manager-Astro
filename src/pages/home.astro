@@ -6,8 +6,8 @@ import Card from '../components/Card.astro';
 ---
 
 <Layout title="Home | IS Manager">
-	<main class="flex flex-col h-[100%] px-[1rem] dark:bg-slate-900">
-		<div class="infoStudent text-slate-900 dark:text-white">
+	<main class="flex flex-col h-[100%] dark:bg-slate-900 py-2">
+		<div class="infoStudent text-slate-900 dark:text-white  px-[1rem]">
 			<div class="row flex flex-row justify-between items-center">
 				<div class="col">
 					<h4 class="text-md font-bold text-2xl">Hi, <span id="username"></span></h4>
@@ -19,8 +19,8 @@ import Card from '../components/Card.astro';
 			</div>
 		</div>
 		<section class="py-4">
-			<h3 class="text-xl font-semibold">Progress</h3>
-			<div class="flex flex-row overflow-x-scroll no-scrollbar w-full gap-2 my-2 ">
+			<h3 class="text-xl font-semibold  px-[1rem]">Progress</h3>
+			<div class="flex flex-row overflow-x-scroll no-scrollbar w-full gap-2 my-2 pl-[1rem] ">
 				<div class="card bg-[#605DFF] bg-gradient-to-r from-[#605DFF] to-[#219de4] text-white rounded-2xl p-4 min-w-[45%] md:min-w-[30%]">
 					<div class="icon bg-[#ffffff80] p-1 rounded-full w-auto aspect-square w-9 h-9 flex justify-center items-center my-2">
 						<svg class="w-5 h-5 text-[#605DFF]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@ import Card from '../components/Card.astro';
 					
 					<ProgressBar title='Global' idProgress='progressGlobal' idText="progressGlobalText"/>
 				</div>
-				<div class="card bg-[#A168FF] bg-gradient-to-r from-[#8857e2] to-[#A168FF] text-white rounded-2xl p-4  min-w-[45%] md:min-w-[30%]">
+				<div class="card bg-[#A168FF] bg-gradient-to-r from-[#8857e2] to-[#A168FF] text-white rounded-2xl p-4  min-w-[45%] md:min-w-[30%] ">
 					<div class="icon bg-[#ffffff80] p-1 rounded-full w-auto aspect-square w-9 h-9 flex justify-center items-center my-2">
 						<svg class="w-5 h-5 text-[#A168FF]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v15a1 1 0 0 0 1 1h15M8 16l2.5-5.5 3 3L17.273 7 20 9.667"/>
@@ -50,8 +50,8 @@ import Card from '../components/Card.astro';
 				</div>
 			</div>
 		</section>
-		<h3>Options</h3>
-		<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+		<h3 class=" px-[1rem] py-1">Options</h3>
+		<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4  px-[1rem]">
 			<a href="/map">
 				<Card>
 					<div class="flex flex-row items-center justify-between">
