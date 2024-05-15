@@ -165,11 +165,27 @@ input {
 		if (key == "" || password == ""){return;}
 		modalLoading.classList.remove('hidden');
 		
-		const options = {method: 'POST', body: JSON.stringify({
-			"cuenta": key,
-			"clave": password
-		})};
+		let headers = new Headers();
 
+		headers.append('Content-Type', 'application/json');
+		headers.append('Accept', 'application/json');
+
+		headers.append('Access-Control-Allow-Origin', 'https://is-manager-astro.vercel.app');
+		headers.append('Access-Control-Allow-Credentials', 'true');
+
+		headers.append('GET', 'POST', 'OPTIONS');
+
+		const options = {
+			mode: 'cors',
+			credentials: 'include',
+			method: 'POST',
+			headers: headers, 
+			body: JSON.stringify({
+				"cuenta": key,
+				"clave": password
+			})
+		};
+		
 		//FASE 1
 		textInfo.innerHTML = "Open Instance..."
 		fetch('https://is-manager.vercel.app/api/refresh1', options)
