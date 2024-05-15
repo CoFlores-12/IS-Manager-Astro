@@ -19,6 +19,7 @@ const { title } = Astro.props;
 		<title>{title}</title>
 		<ViewTransitions />
 		<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/6.1.0/shuffle.min.js" integrity="sha512-r8mIpk3ypCMwNxH6srRZGbjHQlOFt3Mq2vrZ/iymx6g9JUqTeVavofeX6gbrxAC74X5HmBy5gxyhCm6OiXrM0Q==" crossorigin="anonymous" referrerpolicy="no-referrer" ></script>
+		<script type="module" src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 		<script is:inline>
 			const career = JSON.parse(localStorage.getItem("career"));
 			const data = JSON.parse(localStorage.getItem("data"));
