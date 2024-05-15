@@ -1,11 +1,21 @@
 ---
-import Layout from '../layouts/Layout.astro';
 import Logo from '../components/logo.astro';
 ---
 
-<Layout title="Welcome to IS Manager">
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Welcome to IS Manager</title>
+	</head>
+	<body class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+		
 	<div id="modalLoading" class="hidden absolute h-[100%] w-full top-0 bg-[#00000030] flex items-end z-50 md:items-center justify-center">
-		<div class=" bg-white dark:bg-slate-900 min-h-10 w-full flex flex-col justify-center items-center rounded-t-3xl py-4 md:w-auto md:p-10 md:rounded-b-3xl">
+		<div class=" bg-white dark:bg-slate-900 min-h-10 w-full flex flex-col justify-center items-center rounded-t-3xl py-4 md:w-auto md:p-10 md:rounded-b-3xl p-4">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-[120px]">
 				<radialGradient id="a12" cx=".66" fx=".66" cy=".3125" fy=".3125"  gradientTransform="scale(1.5)">
 					<stop offset="0" stop-color="#A168FF"></stop>
@@ -18,7 +28,7 @@ import Logo from '../components/logo.astro';
 					<animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="2" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#605DFF" stroke-width="15" stroke-linecap="round" cx="100" cy="100" r="70">
 				</circle>
 			</svg>
-			<h4 class="text-2xl">Loading</h4>
+			<h4  id="textInfo">Loading</h4>
 		</div>
 	</div>
 	<main class="flex flex-col h-[100%]">
@@ -33,14 +43,46 @@ import Logo from '../components/logo.astro';
 		</div>
 		<div class="card bg-white dark:bg-slate-900 h-[75%] items-center justify-center flex flex-col ">
 			<h3 class="text-3xl mb-8 text-slate-900 dark:text-white">Welcome!</h3>
-			<input type="text" name="" id="" placeholder="Key" class="bg-[#F7F7F7] dark:bg-slate-800">
-			<input type="password" name="" id="" placeholder="Password"  class="bg-[#F7F7F7] dark:bg-slate-800">
+			<input type="text" name="" id="key" placeholder="Account" class="bg-[#F7F7F7] dark:bg-slate-800">
+			<input type="password" name="" id="password" placeholder="Password"  class="bg-[#F7F7F7] dark:bg-slate-800">
 			<button id="btnLogin" class="btn mt-4 text-white dark:text-slate-900">Login</button>
 		</div>
 	</main>
-</Layout>
+
+	</body>
+</html>
 
 <style>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	html, body {
+		font-family: system-ui, sans-serif;
+		height: 100%;
+	}
+	code {
+		font-family:
+			Menlo,
+			Monaco,
+			Lucida Console,
+			Liberation Mono,
+			DejaVu Sans Mono,
+			Bitstream Vera Sans Mono,
+			Courier New,
+			monospace;
+	}
 	main {
 		margin: auto;
 		overflow: hidden;
@@ -104,23 +146,99 @@ input {
 	margin: .5rem 0;
 }
 </style>
-
 <script>
+
 	import { navigate } from 'astro:transitions/client';
+</script>
+<script is:inline type="module">
 	const btnLogin = document.getElementById("btnLogin");
 	const modalLoading = document.getElementById("modalLoading");
+	const textInfo = document.getElementById("textInfo");
 
-	//TODO: remove this function
-	function sleep(ms) {
-		return new Promise(resolve => setTimeout(resolve, ms));
+	function sleep (time) {
+		return new Promise((resolve) => setTimeout(resolve, time));
 	}
 
 	btnLogin.addEventListener("click",async ()=>{
+		const key = document.getElementById("key").value;
+		const password = document.getElementById("password").value;
+		if (key == "" || password == ""){return;}
 		modalLoading.classList.remove('hidden');
+		
+		const options = {method: 'POST', body: JSON.stringify({
+			"cuenta": key,
+			"clave": password
+		})};
 
-		//TODO: auth with API
-		await sleep(6000);
-
-		navigate('/home');
+		//FASE 1
+		textInfo.innerHTML = "Open Instance..."
+		fetch('https://is-manager.vercel.app/api/refresh1', options)
+			.then(response => response.json())
+			.then(response => {
+				//FASE 2
+				textInfo.innerHTML = "Loggin in registro DIPP..."
+				fetch('https://is-manager.vercel.app/api/refresh2', options)
+					.then(response => response.json())
+					.then(response => {
+						//FASE 3
+						textInfo.innerHTML = "Getting student information..."
+						fetch('https://is-manager.vercel.app/api/refresh3', options)
+							.then(response => response.json())
+							.then(response => {
+								//FASE 4
+								textInfo.innerHTML = "Getting student classes..."
+								fetch('https://is-manager.vercel.app/api/refresh4', options)
+									.then(response => response.json())
+									.then(response => {
+										localStorage.setItem('data', JSON.stringify(response));
+										//FASE 5
+										textInfo.innerHTML = "Getting career information..."
+										fetch(`https://is-manager.vercel.app/api/db/${response.INFO.Carrera}`, options)
+											.then(response => response.json())
+											.then(response => {
+												localStorage.setItem('career', JSON.stringify(response))
+												modalLoading.classList.add('hidden');
+												navigate('/home');
+											})
+											.catch(err => {
+												console.error(err);
+												textInfo.innerHTML = "Career not support..."
+												sleep(3000).then(() => {
+													modalLoading.classList.add('hidden');
+													navigate('/home');
+												});
+											});
+									})
+									.catch(err => {
+										console.error(err);
+										textInfo.innerHTML = "Registro DIPP timeout...";
+										sleep(3000).then(() => {
+											modalLoading.classList.add('hidden');
+										});
+									});
+							})
+							.catch(err => {
+										console.error(err);
+										textInfo.innerHTML = "Registro DIPP timeout...";
+										sleep(3000).then(() => {
+											modalLoading.classList.add('hidden');
+										});
+									});
+					})
+					.catch(err => {
+										console.error(err);
+										textInfo.innerHTML = "Invald credentials";
+										sleep(3000).then(() => {
+											modalLoading.classList.add('hidden');
+										});
+									});
+			})
+			.catch(err => {
+										console.error(err);
+										textInfo.innerHTML = "Error in server";
+										sleep(3000).then(() => {
+											modalLoading.classList.add('hidden');
+										});
+									});
 	});
 </script>

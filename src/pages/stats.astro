@@ -6,161 +6,215 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="Stats | IS Manager">
     <main class="col">
         <NavBar title="Stats" origin="home"/>
-        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 px-[1rem] overflow-hidden">
-            <div id="chart"></div>
-            <div id="chartGlobal"></div>
-            <div id="chartAnnual"></div>
-            <div id="chartPeriods"></div>
+        <div class="row justify-center">
+          <div class="radio-inputs bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 my-4">
+              <label class="radio">
+                <input type="radio" name="radio" checked="" data-option="1" data-button>
+                <span class="name">Progress</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="radio" data-option="2" data-button>
+                <span class="name">Global</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="radio" data-option="3" data-button>
+                <span class="name">Annual</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="radio" data-option="4" data-button>
+                <span class="name">Periods</span>
+              </label>
+            </div>
+      </div>
+        <div class="grid grid-cols-1 lg:max-h-[90%] px-[1rem] overflow-hidden" id="chartContainer">
+            
         </div>
     </main>
 </Layout>
+<style>
+  .radio-inputs {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 0.5rem;
+        box-sizing: border-box;
+        box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+        padding: 0.25rem;
+        width: 300px;
+        font-size: 14px;
+    }
+
+.radio-inputs .radio {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.radio-inputs .radio input {
+  display: none;
+}
+
+.radio-inputs .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: .5rem 0;
+  transition: all .15s ease-in-out;
+}
+
+.radio-inputs .radio input:checked + .name {
+  background-color: #fff;
+  font-weight: 600;
+  color: rgb(15 23 42 / 1) !important;
+}
+@media (prefers-color-scheme: dark) {
+    .radio-inputs .radio input:checked + .name {
+        background-color: rgb(15 23 42 / 1);
+        color: #fff !important;
+    }
+}
+</style>
 <script is:inline type="module">
-    const rem = remaining.length;
-    const total = career.classes.length;
-    const passed = past.length;
-
-    //PROGRESS
-    var options = {
-        series: [passed/total*100, rem/total*100],
-        labels: ['Passed', 'Remaining'],
+  const rem = remaining.length;
+  const total = career.classes.length;
+  const passed = past.length;
+  const buttons = document.querySelectorAll('[data-button]');
+  const chart = document.getElementById('chart');
+  const chartContainer = document.getElementById('chartContainer');
+  
+  function CreateChart(ChartType) {
+    chartContainer.innerHTML = '<div id="chart"></div>'
+    const options = {
+      "progress": {
+      series: [passed/total*100, rem/total*100],
+      labels: ['Passed', 'Remaining'],
+      chart: {
+          type: 'donut',
+          height: 700,
+      },
+      plotOptions: {
+          pie: {
+              donut: {
+                  labels: {
+                      show: true,
+                      name: {
+                          show: true,
+                          offsetY: -20,
+                          formatter: function (val) {
+                              return val;
+                          }
+                      },
+                      value: {
+                          show: true,
+                          offsetY: 10,
+                          formatter: function (val) {
+                              return parseInt((val/100)*total) + " Classes";
+                          }
+                      },
+                      total: {
+                          show: true,
+                          label: 'Progress',
+                          formatter: function (w) {
+                              return `${passed+'/'+total} Classes`
+                          }
+                      }
+                  }
+              }
+          }
+      },
+      colors: ['#FF4500', '#FFA500'],
+      stroke: {
+          width: 0, // Elimina el borde blanco
+      },
+      legend: {
+          position: 'bottom',
+          horizontalAlign: 'center',
+          offsetY: 10
+      }
+      },
+      "global": {
+        series: [{
+        name: 'Global',
+        data: [31, 40, 28, 51, 42, 65, 100]
+      }],
         chart: {
-            type: 'donut',
-        },
-        plotOptions: {
-            pie: {
-                donut: {
-                    labels: {
-                        show: true,
-                        name: {
-                            show: true,
-                            offsetY: -20,
-                            formatter: function (val) {
-                                return val;
-                            }
-                        },
-                        value: {
-                            show: true,
-                            offsetY: 10,
-                            formatter: function (val) {
-                                return parseInt((val/100)*total) + " Classes";
-                            }
-                        },
-                        total: {
-                            show: true,
-                            label: 'Progress',
-                            formatter: function (w) {
-                                return `${passed+'/'+total} Classes`
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        colors: ['#FF4500', '#FFA500'],
-        stroke: {
-            width: 0, // Elimina el borde blanco
-        },
-        legend: {
-            position: 'bottom',
-            horizontalAlign: 'center',
-            offsetY: 10
+        height: 350,
+        type: 'area'
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      xaxis: {
+        type: 'datetime',
+        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+      },
+      },
+      "annual": {
+        series: [
+        {
+          name: "Year",
+          data: [28, 29, 33, 36, 32, 32, 33]
         }
-    };
-
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
-    //GLOBAL
-    var optionsGlobal = {
-          series: [{
-          name: 'Global',
-          data: [31, 40, 28, 51, 42, 65, 100]
-        }],
-          chart: {
-          height: 350,
-          type: 'area'
+      ],
+        chart: {
+        height: 350,
+        type: 'line',
+        dropShadow: {
+          enabled: true,
+          color: '#000',
+          top: 18,
+          left: 7,
+          blur: 10,
+          opacity: 0.2
         },
-        dataLabels: {
+        zoom: {
           enabled: false
         },
-        stroke: {
-          curve: 'smooth'
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-        },
-        };
-
-    var chartGlobal = new ApexCharts(document.querySelector("#chartGlobal"), optionsGlobal);
-    chartGlobal.render();
-
-    //ANNUAL
-    var optionsAnnual = {
-          series: [
-          {
-            name: "Year",
-            data: [28, 29, 33, 36, 32, 32, 33]
-          }
-        ],
-          chart: {
-          height: 350,
-          type: 'line',
-          dropShadow: {
-            enabled: true,
-            color: '#000',
-            top: 18,
-            left: 7,
-            blur: 10,
-            opacity: 0.2
-          },
-          zoom: {
-            enabled: false
-          },
-          toolbar: {
-            show: false
-          }
-        },
-        colors: ['#77B6EA'],
-        dataLabels: {
-          enabled: true,
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        title: {
-          text: 'Average Annual',
-          align: 'left'
-        },
-        grid: {
-          borderColor: '#e7e7e7',
-          row: {
-            colors: ['transparent', 'transparent'],
-            opacity: 0.5
-          },
-        },
-        markers: {
-          size: 1
-        },
-        xaxis: {
-          categories: ['2020', '2021', '2022', '2023', '2024', '2025', '2026'],
-          title: {
-            text: 'Year'
-          }
-        },
-        legend: {
-          position: 'top',
-          horizontalAlign: 'right',
-          floating: true,
-          offsetY: -25,
-          offsetX: -5
+        toolbar: {
+          show: false
         }
-        };
-
-    var chartAnnual = new ApexCharts(document.querySelector("#chartAnnual"), optionsAnnual);
-    chartAnnual.render();
-
-    //PERIODS
-    var optionsPeriods = {
+      },
+      colors: ['#77B6EA'],
+      dataLabels: {
+        enabled: true,
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      title: {
+        text: 'Average Annual',
+        align: 'left'
+      },
+      grid: {
+        borderColor: '#e7e7e7',
+        row: {
+          colors: ['transparent', 'transparent'],
+          opacity: 0.5
+        },
+      },
+      markers: {
+        size: 1
+      },
+      xaxis: {
+        categories: ['2020', '2021', '2022', '2023', '2024', '2025', '2026'],
+        title: {
+          text: 'Year'
+        }
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'right',
+        floating: true,
+        offsetY: -25,
+        offsetX: -5
+      }
+      },
+      "periods": {
           series: [{
           name: 'Net Profit',
           data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
@@ -203,11 +257,34 @@ import Layout from "../layouts/Layout.astro";
             }
           }
         }
-        };
+        }
+    }
+    var apexchart = new ApexCharts(document.querySelector("#chart"), options[ChartType]);
+    apexchart.render();
+  }
 
-    var chartPeriods = new ApexCharts(document.querySelector("#chartPeriods"), optionsPeriods);
-    chartPeriods.render();
-      
-    //TODO: Add more Charts
+  CreateChart('progress')
 
+  buttons.forEach((button) => {
+    button.addEventListener('click', (e) => tabOption(e.target));
+  });
+  function tabOption(object) {
+    const value = parseInt(object.getAttribute('data-option'));
+    switch (value) {
+      case 1:
+          CreateChart('progress');
+          break;
+        case 2:
+          CreateChart('global');
+          break;
+        case 3:
+          CreateChart('annual');
+          break;
+        case 4:
+          CreateChart('periods');
+        break;
+      default:
+        break;
+    }
+  }
 </script>
