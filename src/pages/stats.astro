@@ -24,6 +24,10 @@ import Layout from "../layouts/Layout.astro";
                 <input type="radio" name="radio" data-option="4" data-button>
                 <span class="name">Periods</span>
               </label>
+              <label class="radio">
+                <input type="radio" name="radio" data-option="5" data-button>
+                <span class="name">Classes</span>
+              </label>
             </div>
       </div>
         <div class="grid grid-cols-1 lg:max-h-[90%] px-[1rem] overflow-hidden" id="chartContainer">
@@ -122,10 +126,21 @@ import Layout from "../layouts/Layout.astro";
   pointRadius: 8,
   pointHoverRadius: 15
 }]};
+let Classes = [{
+  label: 'Score',
+  data: [],
+  tension: 0.1,
+  pointRadius: 5,
+  pointHoverRadius: 15
+}];
+let classesName = [];
 data.classes.forEach(element => {
+  
   if (element.CALIFICACION < 65) {
     return
   }
+  Classes[0].data.push(element.CALIFICACION)
+  classesName.push(element.ASIGNATURA)
   CLG.labels.push(element.ASIGNATURA);
   CLG.data[0].data.push(element.CALIFICACION);
   if (!(element.ANIO.trim() in anios)) {
@@ -182,7 +197,9 @@ for (const anio in anios) {
   global.data[0].data.push((GL1[0]/GL1[1]).toFixed(2))
 }
 
-global.labels.reverse()
+global.labels.reverse();
+classesName.reverse();
+Classes[0].data.reverse();
   function CreateChart(ChartType) {
     chartContainer.innerHTML = '<div id="chart"></div>'
     const options = {
@@ -376,7 +393,74 @@ global.labels.reverse()
             }
           }
         }
+      },
+      "classes": {
+        series: [
+        {
+          name: "Class",
+          data: Classes[0].data
         }
+      ],
+        chart: {
+        height: 350,
+        type: 'line',
+        dropShadow: {
+          enabled: true,
+          color: '#000',
+          top: 18,
+          left: 7,
+          blur: 10,
+          opacity: 0.2
+        },
+        zoom: {
+          enabled: false
+        },
+        toolbar: {
+          show: false
+        }
+      },
+      colors: ['#77B6EA'],
+      dataLabels: {
+        enabled: true,
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      title: {
+        text: 'Average Annual',
+        align: 'left'
+      },
+      grid: {
+        borderColor: '#e7e7e7',
+        row: {
+          colors: ['transparent', 'transparent'],
+          opacity: 0.5
+        },
+      },
+      markers: {
+        size: 1
+      },
+      xaxis: {
+        categories: classesName,
+        title: {
+          text: 'Class'
+        }
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'right',
+        floating: true,
+        offsetY: -25,
+        offsetX: -5
+      },
+      tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + "%"
+            }
+          }
+        }
+      },
     }
     var apexchart = new ApexCharts(document.querySelector("#chart"), options[ChartType]);
     apexchart.render();
@@ -401,6 +485,9 @@ global.labels.reverse()
           break;
         case 4:
           CreateChart('periods');
+        break;
+        case 5:
+          CreateChart('classes');
         break;
       default:
         break;

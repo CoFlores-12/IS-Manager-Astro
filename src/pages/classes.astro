@@ -2,9 +2,9 @@
 import NavBar from "../components/NavBar.astro";
 import Layout from "../layouts/Layout.astro";
 ---
-
-<Layout title="Classes | IS Manager">
-    <main class="col">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<Layout   title="Classes | IS Manager">
+    <main class="col" >
         <NavBar title="Classes" origin="home"/>
         <div class="row justify-center">
             <div class="radio-inputs bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 my-4">
@@ -58,17 +58,15 @@ import Layout from "../layouts/Layout.astro";
         </section>
         <section class="p-2">
           <div id="headerTable" class="row w-full justify-between">
-            <p>Code</th>
-            <p>Name</th>
+            <p>Class</th>
             <p>Status</th>
-            <p>UV</th>
+            <p>Score</th>
             </div>
           <div id="classesTableBody" class="grid  w-full">
             
           </div>
         </section>
     </main>
-    
 </Layout>
 
 <style is:global>
@@ -95,10 +93,11 @@ border-spacing: 0px 0.5rem;
   border-radius: 10px;
 }
 .item>p:nth-child(1), #headerTable>p:nth-child(1){
-  flex: 1;
+  flex: 4;
+  text-transform: uppercase;
 }
 .item>p:nth-child(2), #headerTable>p:nth-child(2){
-  flex: 4;
+  flex: 1;
 }
 .item>p:nth-child(3), #headerTable>p:nth-child(3){
   flex: 1;
@@ -106,10 +105,7 @@ border-spacing: 0px 0.5rem;
   display: flex;
   justify-content: center
 }
-.item>p:nth-child(4), #headerTable>p:nth-child(4){
-  flex: 1;
-  text-align: center !important;
-}
+
 
     .radio-inputs {
         position: relative;
@@ -269,19 +265,17 @@ border-spacing: 0px 0.5rem;
       const disp = isDisp!=undefined ? '["REM", "DIS"]': '["REM"]';
       const iconREM = isDisp!=undefined ? 'REMDISP': 'REM';
       classesTableBody.innerHTML += `<div class="item w-full row justify-between"  data-groups='${disp}'>
-                <p>${cl.codigo}</p>
-                <p>${cl.nombre}</p>
+                <p>${cl.nombre} (${cl.uv})</p>
                 <p>${statusIcon[iconREM]}</p>
-                <p>${cl.uv}</p>
+                <p>-</p>
               </div>`
     });
     const dataRev = data.classes
     dataRev.forEach(cl => {
-      classesTableBody.innerHTML += `<div class="item w-full row justify-between"  data-groups='["${cl.OBS}"]'>
-                <p>${cl.CODIGO}</p>
-                <p>${cl.ASIGNATURA}</p>
+      classesTableBody.innerHTML += `<div  @click="open = true"  class="item w-full row justify-between"  data-groups='["${cl.OBS}"]'>
+                <p>${cl.ASIGNATURA} (${parseInt(cl.UV)})</p>
                 <p>${statusIcon[cl.OBS]}</p>
-                <p>${parseInt(cl.UV)}</p>
+                <p>${parseInt(cl.CALIFICACION)}</p>
               </div>`
     });
 
