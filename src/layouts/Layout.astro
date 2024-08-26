@@ -23,6 +23,9 @@ const { title } = Astro.props;
 		<script is:inline>
 			const data = JSON.parse(localStorage.getItem("data"));
 			let career = JSON.parse(localStorage.getItem("career"));
+			let remaining;
+			let past;
+			let available;
 			if (localStorage.getItem('career') === null) {
 				fetch(`https://is-manager.vercel.app/api/db/${data.INFO.Carrera}`, {
 					method: 'POST',
@@ -54,7 +57,7 @@ const { title } = Astro.props;
 				data.classes = data.classes.reverse();
 			
 			//TODO: verify optativas y electivas
-			const past = data.classes.filter(function(element){
+			past = data.classes.filter(function(element){
 				return element.CALIFICACION >= 65;
 			});
 			
@@ -67,7 +70,7 @@ const { title } = Astro.props;
 				}
 			}
 
-			const remaining = career.classes.filter(function(element){
+			remaining = career.classes.filter(function(element){
 				if (element.codigo.trim() === "Electiva") {
 				const electivasJSON = [];
 				for (let i = 0; i < career.electivas[element.nombre].length; i++) {
@@ -92,7 +95,7 @@ const { title } = Astro.props;
 				return isPast === undefined
 			})
 
-			const available = remaining.filter(function(element){
+			available = remaining.filter(function(element){
 				counter = 0;
 
 				if (element.codigo.trim() === "optativa") {
