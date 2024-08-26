@@ -173,7 +173,7 @@ input {
 			textInfo.innerHTML = 'logging in Registro';
         	
 
-			const registerResponse = await fetch('/api/register', {
+			const registerResponse = await fetch('https://is-manager.vercel.app/api/register', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
