@@ -151,111 +151,75 @@ input {
 	const modalLoading = document.getElementById("modalLoading");
 	const textInfo = document.getElementById("textInfo");
 
-	function sleep (time) {
-		return new Promise((resolve) => setTimeout(resolve, time));
-	}
-
 	btnLogin.addEventListener("click",async ()=>{
 		const key = document.getElementById("key").value;
 		const password = document.getElementById("password").value;
 		const host = 'https://is-manager.vercel.app'
+
 		if (key == "" || password == ""){return;}
 		modalLoading.classList.remove('hidden');
 
-		
-fetch(host+`/api/db/INGENIERIA%20EN%20SISTEMAS`, {
-			mode: 'cors',
-			credentials: 'include',
-			method: 'POST'
-		})
-			.then(response => response.json())
-			.then(response => {
-				console.log(response.json());
-			})
-			.catch(err => {
-				console.log(err);
+		try {
+			let response = await fetch('https://is-manager.vercel.app/api/refresh1', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			});
-		
-		const options = {
-			mode: 'cors',
-			credentials: 'include',
-			method: 'POST',
-			body: JSON.stringify({
-				"cuenta": key,
-				"clave": password
-			})
-		};
-		
-		return
-		//FASE 1
-		textInfo.innerHTML = "Open Instance..."
-		fetch(host+'/api/newInstance', options)
-			.then(response => response.json())
-			.then(response => {
-				//FASE 2
-				textInfo.innerHTML = "Loggin in registro DIPP..."
-				fetch(host+'/api/login', options)
-					.then(response => response.json())
-					.then(response => {
-						//FASE 3
-						textInfo.innerHTML = "Getting student information..."
-						fetch(host+'/api/studentInfo', options)
-							.then(response => response.json())
-							.then(response => {
-								//FASE 4
-								textInfo.innerHTML = "Getting student classes..."
-								fetch(host+'/api/studentClasses', options)
-									.then(response => response.json())
-									.then(response => {
-										localStorage.setItem('data', JSON.stringify(response));
-										//FASE 5
-										textInfo.innerHTML = "Getting career information..."
-										fetch(host+`/api/db/${response.INFO.Carrera}`, options)
-											.then(response => response.json())
-											.then(response => {
-												localStorage.setItem('career', JSON.stringify(response))
-												modalLoading.classList.add('hidden');
-												navigate('/home');
-											})
-											.catch(err => {
-												console.error(err);
-												textInfo.innerHTML = "Career not support..."
-												sleep(3000).then(() => {
-													modalLoading.classList.add('hidden');
-													navigate('/home');
-												});
-											});
-									})
-									.catch(err => {
-										console.error(err);
-										textInfo.innerHTML = "Registro DIPP timeout...";
-										sleep(3000).then(() => {
-											modalLoading.classList.add('hidden');
-										});
-									});
-							})
-							.catch(err => {
-										console.error(err);
-										textInfo.innerHTML = "Registro DIPP timeout...";
-										sleep(3000).then(() => {
-											modalLoading.classList.add('hidden');
-										});
-									});
-					})
-					.catch(err => {
-										console.error(err);
-										textInfo.innerHTML = "Invald credentials";
-										sleep(3000).then(() => {
-											modalLoading.classList.add('hidden');
-										});
-									});
-			})
-			.catch(err => {
-										console.error(err);
-										textInfo.innerHTML = "Error in server";
-										sleep(3000).then(() => {
-											modalLoading.classList.add('hidden');
-										});
-									});
+
+			if (!response.ok) throw new Error('Error in server');
+
+			textInfo.innerHTML = 'logging in Registro';
+        	
+
+			response = await fetch('https://is-manager.vercel.app/api/refresh2', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (!response.ok) throw new Error('Login again please');
+
+			
+			textInfo.innerHTML = 'going to academic record';
+
+			response = await fetch('https://is-manager.vercel.app/api/refresh3', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (!response.ok) throw new Error('Error in server');
+
+			textInfo.innerHTML = 'getting student information';
+
+			response = await fetch('https://is-manager.vercel.app/api/refresh4', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (!response.ok) throw new Error('Error in server');
+
+			const data = await response.json();
+			localStorage.setItem('data', JSON.stringify(data));
+
+			textInfo.innerHTML = 'Done!';
+
+			window.location.href = '/home.html';
+
+		} catch (error) {
+			if (error.message === 'Login again please') {
+				window.location.href = '/index.html';
+			}
+		}
+
 	});
 </script>
