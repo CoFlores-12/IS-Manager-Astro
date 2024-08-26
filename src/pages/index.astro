@@ -173,15 +173,20 @@ input {
 			textInfo.innerHTML = 'logging in Registro';
         	
 
-			response = await fetch('https://is-manager.vercel.app/api/refresh2', {
+			const registerResponse = await fetch('/api/register', {
 				method: 'POST',
-				credentials: 'include',
 				headers: {
 					'Content-Type': 'application/json'
-				}
+				},
+				body: JSON.stringify({
+					"cuenta": key,
+					"clave": password
+				})
 			});
 
-			if (!response.ok) throw new Error('Login again please');
+			if (!registerResponse.ok) {
+				throw new Error('Error credentials');
+			}
 
 			
 			textInfo.innerHTML = 'going to academic record';
@@ -216,9 +221,7 @@ input {
 			window.location.href = '/home.html';
 
 		} catch (error) {
-			if (error.message === 'Login again please') {
-				window.location.href = '/index.html';
-			}
+			//window.location.href = '/index.html';
 		}
 
 	});
