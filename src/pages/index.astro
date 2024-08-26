@@ -15,7 +15,7 @@ import Logo from '../components/logo.astro';
 	<body class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
 		
 	<div id="modalLoading" class="hidden absolute h-[100%] w-full top-0 bg-[#00000030] flex items-end z-50 md:items-center justify-center">
-		<div class=" bg-white dark:bg-slate-900 min-h-10 w-full flex flex-col justify-center items-center rounded-t-3xl py-4 md:w-auto md:p-10 md:rounded-b-3xl p-4">
+		<div class=" bg-white dark:bg-slate-900 min-h-10 w-full flex flex-col justify-center items-center rounded-t-3xl md:w-auto md:p-10 md:rounded-b-3xl p-4">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-[120px]">
 				<radialGradient id="a12" cx=".66" fx=".66" cy=".3125" fy=".3125"  gradientTransform="scale(1.5)">
 					<stop offset="0" stop-color="#A168FF"></stop>
@@ -63,10 +63,6 @@ import Logo from '../components/logo.astro';
 			rgb(var(--accent-light)) 30%,
 			white 60%
 		);
-	}
-	*{
-		margin: 0;
-		padding: 0;
 	}
 	html, body {
 		font-family: system-ui, sans-serif;
@@ -162,54 +158,59 @@ input {
 	btnLogin.addEventListener("click",async ()=>{
 		const key = document.getElementById("key").value;
 		const password = document.getElementById("password").value;
+		const host = 'https://is-manager.vercel.app'
 		if (key == "" || password == ""){return;}
 		modalLoading.classList.remove('hidden');
+
 		
-		let headers = new Headers();
-
-		headers.append('Content-Type', 'application/json');
-		headers.append('Accept', 'application/json');
-
-		headers.append('Access-Control-Allow-Origin', 'https://is-manager-astro.vercel.app');
-		headers.append('Access-Control-Allow-Credentials', 'true');
-
-		headers.append('GET', 'POST', 'OPTIONS');
-
+fetch(host+`/api/db/INGENIERIA%20EN%20SISTEMAS`, {
+			mode: 'cors',
+			credentials: 'include',
+			method: 'POST'
+		})
+			.then(response => response.json())
+			.then(response => {
+				console.log(response.json());
+			})
+			.catch(err => {
+				console.log(err);
+			});
+		
 		const options = {
 			mode: 'cors',
 			credentials: 'include',
 			method: 'POST',
-			headers: headers, 
 			body: JSON.stringify({
 				"cuenta": key,
 				"clave": password
 			})
 		};
 		
+		return
 		//FASE 1
 		textInfo.innerHTML = "Open Instance..."
-		fetch('https://is-manager.vercel.app/api/refresh1', options)
+		fetch(host+'/api/newInstance', options)
 			.then(response => response.json())
 			.then(response => {
 				//FASE 2
 				textInfo.innerHTML = "Loggin in registro DIPP..."
-				fetch('https://is-manager.vercel.app/api/refresh2', options)
+				fetch(host+'/api/login', options)
 					.then(response => response.json())
 					.then(response => {
 						//FASE 3
 						textInfo.innerHTML = "Getting student information..."
-						fetch('https://is-manager.vercel.app/api/refresh3', options)
+						fetch(host+'/api/studentInfo', options)
 							.then(response => response.json())
 							.then(response => {
 								//FASE 4
 								textInfo.innerHTML = "Getting student classes..."
-								fetch('https://is-manager.vercel.app/api/refresh4', options)
+								fetch(host+'/api/studentClasses', options)
 									.then(response => response.json())
 									.then(response => {
 										localStorage.setItem('data', JSON.stringify(response));
 										//FASE 5
 										textInfo.innerHTML = "Getting career information..."
-										fetch(`https://is-manager.vercel.app/api/db/${response.INFO.Carrera}`, options)
+										fetch(host+`/api/db/${response.INFO.Carrera}`, options)
 											.then(response => response.json())
 											.then(response => {
 												localStorage.setItem('career', JSON.stringify(response))

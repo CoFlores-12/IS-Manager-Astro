@@ -36,7 +36,7 @@ import Layout from "../layouts/Layout.astro";
                     
                 <label class="radio">
                   <input type="radio" name="radio2" data-option="3" data-his>
-                  <span class="name">RPB</span>
+                  <span class="name">RPB/ABN</span>
                 </label>
               </div>
         </div>
@@ -239,10 +239,14 @@ border-spacing: 0px 0.5rem;
     }
   }
     const statusIcon = {
-        "REM": `<svg class="w-6 h-6 text-slate-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        "REM": `<svg class="w-6 h-6 text-slate-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
   </svg>
   `,
+    "REMDISP": `<svg class="w-6 h-6 text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+    </svg>
+    `,
         "APR": `<svg class="w-6 h-6 text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
   </svg>
@@ -263,10 +267,11 @@ border-spacing: 0px 0.5rem;
     remaining.forEach(cl => {
       const isDisp = available.find((el) => el.codigo == cl.codigo);
       const disp = isDisp!=undefined ? '["REM", "DIS"]': '["REM"]';
+      const iconREM = isDisp!=undefined ? 'REMDISP': 'REM';
       classesTableBody.innerHTML += `<div class="item w-full row justify-between"  data-groups='${disp}'>
                 <p>${cl.codigo}</p>
                 <p>${cl.nombre}</p>
-                <p>${statusIcon['REM']}</p>
+                <p>${statusIcon[iconREM]}</p>
                 <p>${cl.uv}</p>
               </div>`
     });

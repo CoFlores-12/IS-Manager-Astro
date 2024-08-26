@@ -84,6 +84,105 @@ import Layout from "../layouts/Layout.astro";
   const chart = document.getElementById('chart');
   const chartContainer = document.getElementById('chartContainer');
   
+  let anios = {};
+  let aniosbar = [];
+  let dataCTX = [{
+  label: 'Average',
+  data: [],
+  tension: 0.1,
+  pointRadius: 5,
+  pointHoverRadius: 15
+}];
+  let dataBar = [
+    {
+      label: 'I PAC',
+      data: []
+    },
+    {
+      label: 'II PAC',
+      data: []
+    },
+    {
+      label: 'III PAC',
+      data: []
+    }
+  ];
+  let CLG = {"labels":[],"data":[{
+  label: "CLASSES",
+  data: [],
+  tension: 0.1,
+  pointStyle: 'circle',
+  pointRadius: 8,
+  pointHoverRadius: 15
+}]};
+  let global = {"labels":[],"data":[{
+  label: "GLOBAL",
+  data: [],
+  tension: 0.1,
+  pointRadius: 8,
+  pointHoverRadius: 15
+}]};
+data.classes.forEach(element => {
+  if (element.CALIFICACION < 65) {
+    return
+  }
+  CLG.labels.push(element.ASIGNATURA);
+  CLG.data[0].data.push(element.CALIFICACION);
+  if (!(element.ANIO.trim() in anios)) {
+      anios[element.ANIO.trim()] = {
+        1: {
+          "uv": 0,
+          "notas": 0,
+          "snota": 0,
+        },
+        2: {
+          "uv": 0,
+          "notas": 0,
+          "snota": 0,
+        },
+        3: {
+          "uv": 0,
+          "notas": 0,
+          "snota": 0,
+        }
+      }
+    }
+    anios[element.ANIO.trim()][element.PERIODO.trim()].uv += element.UV*1;
+    anios[element.ANIO.trim()][element.PERIODO.trim()].notas += element.CALIFICACION*1;
+    anios[element.ANIO.trim()][element.PERIODO.trim()].snota += element.UV*element.CALIFICACION;
+
+    if (!(global.labels.includes(element.PERIODO.trim() + ' PAC ' + element.ANIO.trim()))){
+      global.labels.push((element.PERIODO.trim() + ' PAC ' + element.ANIO.trim()))
+    }
+});
+
+let GL1=[0,0];
+for (const anio in anios) {
+  aniosbar.push(anio)
+  dataBar[0].data.push((anios[anio][1].snota/anios[anio][1].uv).toFixed(2))
+  dataBar[1].data.push((anios[anio][2].snota/anios[anio][2].uv).toFixed(2))
+  dataBar[2].data.push((anios[anio][3].snota/anios[anio][3].uv).toFixed(2))
+  let anual = [0,0]
+  anual[0] += anios[anio][1].snota;
+  anual[1] += anios[anio][1].uv;
+  anual[0] += anios[anio][2].snota;
+  anual[1] += anios[anio][2].uv;
+  anual[0] += anios[anio][3].snota;
+  anual[1] += anios[anio][3].uv;
+  dataCTX[0].data.push((anual[0]/anual[1]).toFixed(2));
+
+  GL1[0] += anios[anio][1].snota;
+  GL1[1] += anios[anio][1].uv;
+  global.data[0].data.push((GL1[0]/GL1[1]).toFixed(2))
+  GL1[0] += anios[anio][2].snota;
+  GL1[1] += anios[anio][2].uv;
+  global.data[0].data.push((GL1[0]/GL1[1]).toFixed(2))
+  GL1[0] += anios[anio][3].snota;
+  GL1[1] += anios[anio][3].uv;
+  global.data[0].data.push((GL1[0]/GL1[1]).toFixed(2))
+}
+
+global.labels.reverse()
   function CreateChart(ChartType) {
     chartContainer.innerHTML = '<div id="chart"></div>'
     const options = {
@@ -132,12 +231,19 @@ import Layout from "../layouts/Layout.astro";
           position: 'bottom',
           horizontalAlign: 'center',
           offsetY: 10
-      }
+      },
+      tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + "%"
+            }
+          }
+        }
       },
       "global": {
         series: [{
         name: 'Global',
-        data: [31, 40, 28, 51, 42, 65, 100]
+        data: global.data[0].data
       }],
         chart: {
         height: 350,
@@ -150,15 +256,21 @@ import Layout from "../layouts/Layout.astro";
         curve: 'smooth'
       },
       xaxis: {
-        type: 'datetime',
-        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+        categories: global.labels
       },
+      tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + "%"
+            }
+          }
+        }
       },
       "annual": {
         series: [
         {
           name: "Year",
-          data: [28, 29, 33, 36, 32, 32, 33]
+          data: dataCTX[0].data
         }
       ],
         chart: {
@@ -201,7 +313,7 @@ import Layout from "../layouts/Layout.astro";
         size: 1
       },
       xaxis: {
-        categories: ['2020', '2021', '2022', '2023', '2024', '2025', '2026'],
+        categories: aniosbar,
         title: {
           text: 'Year'
         }
@@ -212,18 +324,25 @@ import Layout from "../layouts/Layout.astro";
         floating: true,
         offsetY: -25,
         offsetX: -5
-      }
+      },
+      tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + "%"
+            }
+          }
+        }
       },
       "periods": {
           series: [{
-          name: 'Net Profit',
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+          name: dataBar[0].label,
+          data: dataBar[0].data
         }, {
-          name: 'Revenue',
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+          name: dataBar[1].label,
+          data: dataBar[1].data
         }, {
-          name: 'Free Cash Flow',
-          data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+          name: dataBar[2].label,
+          data: dataBar[2].data
         }],
           chart: {
           type: 'bar',
@@ -245,7 +364,7 @@ import Layout from "../layouts/Layout.astro";
           colors: ['transparent']
         },
         xaxis: {
-          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+          categories: aniosbar,
         },
         fill: {
           opacity: 1
@@ -253,7 +372,7 @@ import Layout from "../layouts/Layout.astro";
         tooltip: {
           y: {
             formatter: function (val) {
-              return "$ " + val + " thousands"
+              return val + "%"
             }
           }
         }
