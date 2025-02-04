@@ -202,19 +202,48 @@ input {
 			if (!response.ok) throw new Error('Error in server');
 
 			textInfo.innerHTML = 'getting student information';
+    try {
+        // Obtener información del usuario
+        const userInfoResponse = await fetch('https://is-manager.vercel.app/api/getUserInfo', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-			response = await fetch('https://is-manager.vercel.app/api/refresh4', {
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
+        if (!userInfoResponse.ok) throw new Error('Error al obtener información del usuario');
 
-			if (!response.ok) throw new Error('Error in server');
+        const userInfo = await userInfoResponse.json();
 
-			const data = await response.json();
-			localStorage.setItem('data', JSON.stringify(data));
+        // Obtener todas las clases paginadas
+        const classDataResponse = await fetch('https://is-manager.vercel.app/api/getAllPages', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!classDataResponse.ok) throw new Error('Error al obtener datos de las clases');
+
+        const classData = await classDataResponse.json();
+
+				// Unir toda la información en un solo objeto
+				const fullData = {
+					INFO: userInfo,
+					classes: classData.classes
+				};
+
+				// Guardar en localStorage
+				localStorage.setItem('data', JSON.stringify(fullData));
+
+		} catch (error) {
+			console.error('Error al obtener datos:', error);
+		}
+		
+
+
 
 			textInfo.innerHTML = 'Done!';
 
@@ -222,6 +251,7 @@ input {
 
 		} catch (error) {
 			//window.location.href = '/index.html';
+			modalLoading.classList.add('hidden');
 		}
 
 	});
