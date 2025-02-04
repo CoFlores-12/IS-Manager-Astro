@@ -154,7 +154,8 @@ input {
 	btnLogin.addEventListener("click",async ()=>{
 		const key = document.getElementById("key").value;
 		const password = document.getElementById("password").value;
-		const host = 'https://is-manager.vercel.app'
+		const host = 'https://is-manager.vercel.app';
+		let pages = 0;
 
 		if (key == "" || password == ""){return;}
 		modalLoading.classList.remove('hidden');
@@ -200,6 +201,8 @@ input {
 			});
 
 			if (!response.ok) throw new Error('Error in server');
+			const data3 = await response.json();
+			pages = data3.pages;
 
 			textInfo.innerHTML = 'getting student information';
     try {
@@ -217,26 +220,24 @@ input {
         const userInfo = await userInfoResponse.json();
 
         // Obtener todas las clases paginadas
-        const classDataResponse = await fetch('https://is-manager.vercel.app/api/getAllPages', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        let allData = [];
+  
+		for (let i = 1; i <= pages; i++) {
+			const response = await fetch(`https://is-manager.vercel.app/api/getPageData?pageNum=${i}`);
+			const data = await response.json();
+			allData = allData.concat(data.data);
+		}
 
-        if (!classDataResponse.ok) throw new Error('Error al obtener datos de las clases');
+		console.log(allData);
+		
 
-        const classData = await classDataResponse.json();
+		const fullData = {
+			INFO: userInfo,
+			classes: allData
+		};
 
-				// Unir toda la información en un solo objeto
-				const fullData = {
-					INFO: userInfo,
-					classes: classData.classes
-				};
-
-				// Guardar en localStorage
-				localStorage.setItem('data', JSON.stringify(fullData));
+		// Guardar en localStorage
+		localStorage.setItem('data', JSON.stringify(fullData));
 
 		} catch (error) {
 			console.error('Error al obtener datos:', error);
